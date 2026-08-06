@@ -7,7 +7,7 @@
 
 ;; Get new version: curl -s https://static.ampcode.com/cli/cli-version.txt
 (define ampcode-version
-  "0.0.1785733786-gde6a10")
+  "0.0.1786019606-geb05a8")
 
 (define ampcode-platform
   "linux-arm64")
@@ -25,7 +25,7 @@
        ;; Update version and hash together; never fetch a moving latest binary.
        ;; Get new hash: guix download https://static.ampcode.com/cli/$(curl -s https://static.ampcode.com/cli/cli-version.txt)/amp-linux-arm64
        (sha256
-        (base32 "0a26f8d62fi0cv2ms7a4yj31bhq6xrh17439n7zs597j5faahl96"))))
+        (base32 "0dcyr243bvv2lh3kjkr2yhcgav6d5r10dznadcgihf7s0jwx9y54"))))
     (build-system copy-build-system)
     ;; This upstream binary is built for conventional Linux/FHS and is expected
     ;; to run through `guix shell --emulate-fhs`.
