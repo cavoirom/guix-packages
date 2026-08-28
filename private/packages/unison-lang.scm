@@ -7,6 +7,7 @@
   #:use-module (gnu packages less)
   #:use-module (gnu packages multiprecision)
   #:use-module (gnu packages ncurses)
+  #:use-module (gnu packages nss)
   #:use-module (guix build-system copy)
   #:use-module (guix download)
   #:use-module ((guix licenses)
@@ -19,7 +20,7 @@
 (define unison-lang-platform
   "linux-arm64")
 
-(define-public unison-lang
+(define-public unison-lang-1.3
   (package
     (name "unison-lang")
     (version unison-lang-version)
@@ -40,6 +41,7 @@
                   gmp
                   less
                   ncurses
+                  nss-certs
                   zlib))
     (arguments
      `(#:phases (modify-phases %standard-phases
@@ -55,15 +57,15 @@
                     (lambda* (#:key inputs #:allow-other-keys)
                       (let* ((ld-so (search-input-file inputs
                                                        ,(glibc-dynamic-linker)))
-                             (rpath (string-join
-                                     (cons (dirname ld-so)
-                                           (map (lambda (file)
-                                                  (dirname (search-input-file
-                                                            inputs file)))
-                                                '("lib/libgmp.so.10"
-                                                  "lib/libncursesw.so.6"
-                                                  "lib/libz.so.1")))
-                                     ":")))
+                             (rpath (string-join (cons (dirname ld-so)
+                                                       (map (lambda (file)
+                                                              (dirname (search-input-file
+                                                                        inputs
+                                                                        file)))
+                                                            '("lib/libgmp.so.10"
+                                                              "lib/libncursesw.so.6"
+                                                              "lib/libz.so.1")))
+                                                 ":")))
                         (invoke "patchelf"
                                 "--set-interpreter"
                                 ld-so
@@ -80,6 +82,9 @@
                              (ui (string-append share "/ui"))
                              (ucm (string-append bin "/ucm"))
                              (bash (search-input-file inputs "bin/bash"))
+                             (certs (string-append (assoc-ref inputs
+                                                              "nss-certs")
+                                                   "/etc/ssl/certs"))
                              (less-bin (dirname (search-input-file inputs
                                                                    "bin/less"))))
                         (mkdir-p bin)
@@ -90,17 +95,23 @@
                         (call-with-output-file ucm
                           (lambda (port)
                             (display (string-append "#!"
-                                                    bash
-                                                    "\n"
-                                                    "export UCM_WEB_UI=\""
-                                                    ui
-                                                    "\"\n"
-                                                    "export PATH=\""
-                                                    less-bin
-                                                    "${PATH:+:$PATH}\"\n"
-                                                    "exec \""
-                                                    real-ucm
-                                                    "\" \"$@\"\n") port)))
+                                      bash
+                                      "\n"
+                                      "export UCM_WEB_UI=\""
+                                      ui
+                                      "\"\n"
+                                      "if [ -z \"${SSL_CERT_FILE+x}\" ] && "
+                                      "[ -z \"${SSL_CERT_DIR+x}\" ]; then\n"
+                                      "  export SSL_CERT_DIR=\""
+                                      certs
+                                      "\"\n"
+                                      "fi\n"
+                                      "export PATH=\""
+                                      less-bin
+                                      "${PATH:+:$PATH}\"\n"
+                                      "exec \""
+                                      real-ucm
+                                      "\" \"$@\"\n") port)))
                         (chmod ucm #o755))))
                   (add-after 'install 'check-installed
                     (lambda* (#:key outputs tests? #:allow-other-keys)
@@ -125,3 +136,6 @@ content-addressed code.  This package installs the Unison Codebase Manager and
 its bundled local web interface from the official upstream release.")
     (home-page "https://www.unison-lang.org/")
     (license (list license:expat license:bsd-3))))
+
+(define-public unison-lang
+  unison-lang-1.3)
