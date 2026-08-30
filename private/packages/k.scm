@@ -7,10 +7,10 @@
                 #:select (unison-lang-1.3)))
 
 (define k-version
-  "0.1.1")
+  "0.1.2")
 
 (define k-commit
-  "ef7736d8af25a7c58ef60c00662065f68664201f")
+  "2acc4aaa5aba989ecc715a273124ce5e8b9ee933")
 
 (define-public k
   (package
@@ -24,7 +24,7 @@
              (commit k-commit)))
        (file-name (git-file-name name version))
        (sha256
-        (base32 "06y6c7pds6x0a867m0r5iabiliyl1hgfmyvmgvpkzjywmg7bg5fn"))))
+        (base32 "0y42pgpv9975jxhvss8c2n1d6qmhybynj0220lxfgjc6zwvqj9m6"))))
     (build-system copy-build-system)
     (inputs (list bash-minimal unison-lang-1.3))
     (arguments
@@ -114,5 +114,5 @@ k/main> sync.from-file ./k.usync /master
 language.  This package compiles its exported Unison codebase and runs the
 result with the matching Unison Codebase Manager runtime.")
     (home-page "https://github.com/cavoirom/k")
-    ;; The 0.1.1 source tag does not declare a license.
+    ;; The 0.1.2 source tag does not declare a license.
     (license #f)))
