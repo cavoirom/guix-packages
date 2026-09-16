@@ -7,7 +7,7 @@
                 #:select (unison-lang-1.3)))
 
 (define k-commit
-  "2ee4f2dc8be983fcd27a4a5610033368d7514c25")
+  "a0bbc3eeae51d834d7c22d31ee80b4c5afadce01")
 
 (define-public k
   (package
@@ -21,7 +21,7 @@
              (commit k-commit)))
        (file-name (git-file-name name version))
        (sha256
-        (base32 "003ki5fdy5ls98wmpxyvppx8yis9xmfjakaln9113y19xvghgvw9"))))
+        (base32 "034h8442psm9c4x9sqz3zkwg7xx6xgf4wndxd06mifwigx2zj2z0"))))
     (build-system copy-build-system)
     (inputs (list bash-minimal unison-lang-1.3))
     (arguments
