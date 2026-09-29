@@ -7,7 +7,7 @@
                 #:select (unison-lang-1.3)))
 
 (define k-commit
-  "a0bbc3eeae51d834d7c22d31ee80b4c5afadce01")
+  "030c35b7653540fada0d8ceee47d01e279f9e080")
 
 (define-public k
   (package
@@ -21,7 +21,7 @@
              (commit k-commit)))
        (file-name (git-file-name name version))
        (sha256
-        (base32 "034h8442psm9c4x9sqz3zkwg7xx6xgf4wndxd06mifwigx2zj2z0"))))
+        (base32 "1immcp2pihy1bfk7w8r85s53676dp83sylz7hnz8j3xn83l9jdzi"))))
     (build-system copy-build-system)
     (inputs (list bash-minimal unison-lang-1.3))
     (arguments
@@ -40,7 +40,7 @@
                           (lambda (port)
                             (display "```ucm
 scratch/main> project.create-empty k
-k/main> sync.from-file ./k.usync /master
+k/main> sync.from-file ./k-legacy.usync /legacy
 ```
 "
                              port)))
@@ -54,7 +54,7 @@ k/main> sync.from-file ./k.usync /master
                               (ucm (search-input-file inputs "bin/ucm")))
                           (call-with-output-file "test.md"
                             (lambda (port)
-                              (display "```ucm\nk/master> test\n```\n" port)))
+                              (display "```ucm\nk/legacy> test\n```\n" port)))
                           (invoke ucm "transcript.in-place"
                                   "--codebase-create" codebase "test.md")))))
                   (add-after 'check 'compile
@@ -65,7 +65,7 @@ k/main> sync.from-file ./k.usync /master
                         (call-with-output-file "compile.md"
                           (lambda (port)
                             (display
-                                     "```ucm\nk/master> compile k.main ./k\n```\n"
+                                     "```ucm\nk/legacy> compile k.main ./k\n```\n"
                                      port)))
                         (invoke ucm "transcript.in-place" "--codebase-create"
                                 codebase "compile.md"))))
