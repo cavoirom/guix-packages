@@ -7,7 +7,7 @@
                 #:select (unison-lang-1.3)))
 
 (define k-commit
-  "48b391f4841ac8bec2fd06df22beef012668f2c0")
+  "12974234b079f3dfd8c83bd9f1788b5733bfa733")
 
 (define-public k
   (package
@@ -21,7 +21,7 @@
              (commit k-commit)))
        (file-name (git-file-name name version))
        (sha256
-        (base32 "0j2vflkl47g6jwmmmks5qmi75gcbpk3w6l938k16rybx2i7zw3pi"))))
+        (base32 "1yzbagzs8iyz07v4cgv6bxlxrb10b3sj0yii5bzy0cv4l8dkjx8j"))))
     (build-system copy-build-system)
     (inputs (list bash-minimal unison-lang-1.3))
     (arguments
@@ -40,7 +40,7 @@
                           (lambda (port)
                             (display "```ucm
 scratch/main> project.create-empty k
-k/main> sync.from-file ./k-legacy.usync /legacy
+k/main> sync.from-file ./src/legacy.usync /legacy
 ```
 "
                              port)))
