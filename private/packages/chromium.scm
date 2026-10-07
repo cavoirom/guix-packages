@@ -175,7 +175,9 @@ export FONTCONFIG_FILE=\"${FONTCONFIG_FILE:-~a}\"
 exec ~a/chrome \"$@\"
 "
                               (search-input-file inputs "bin/bash") fonts tree)))
-                  (chmod launcher #o755))))
+                  (chmod launcher #o755)
+                  (symlink (string-append tree "/chromedriver")
+                           (string-append bin "/chromiumdriver")))))
             (add-after 'make-launcher 'install-license
               (lambda* (#:key outputs #:allow-other-keys)
                 (let ((directory (string-append (assoc-ref outputs "out")
@@ -220,6 +222,19 @@ exec ~a/chrome \"$@\"
                       (format #t "Browser version: ~a~%" reported)
                       (unless (and (zero? status) (string=? reported expected))
                         (error "unexpected browser version" reported expected
+                               status)))
+                    (let* ((port (open-pipe* OPEN_READ "timeout"
+                                             "--kill-after=5s" "60s"
+                                             (string-append out "/bin/chromiumdriver")
+                                             "--version"))
+                           (reported (string-trim-right (get-string-all port)))
+                           (status (close-pipe port))
+                           (expected (string-append "ChromeDriver "
+                                                    #$browser-version " ")))
+                      (format #t "Driver version: ~a~%" reported)
+                      (unless (and (zero? status)
+                                   (string-prefix? expected reported))
+                        (error "unexpected driver version" reported expected
                                status)))))))))))
     (supported-systems '("aarch64-linux"))
     (home-page "https://ungoogled-software.github.io/")
