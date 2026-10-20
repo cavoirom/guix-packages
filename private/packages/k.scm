@@ -4,7 +4,7 @@
   #:use-module (guix git-download)
   #:use-module (guix packages)
   #:use-module ((private packages unison-lang)
-                #:select (unison-lang-1.3)))
+                #:select (unison-lang)))
 
 (define k-commit
   "0b73abe22786b3d492fc1592409a5d69f80f8700")
@@ -23,7 +23,7 @@
        (sha256
         (base32 "1b7wcvmq53fl9r8qld8z0kqjj5mz9zs32yicmzpa0j81irycgiws"))))
     (build-system copy-build-system)
-    (inputs (list bash-minimal unison-lang-1.3))
+    (inputs (list bash-minimal unison-lang))
     (arguments
      `(#:phases (modify-phases %standard-phases
                   (add-after 'unpack 'prepare-build
@@ -103,7 +103,7 @@ k/main> sync.from-file ./src/legacy.usync /legacy
                           (error "installed k files are missing"))
                         (when tests?
                           (invoke launcher "models" "codex" "status"))))))))
-    ;; UCM 1.3.0 is packaged from an AArch64 Linux release artifact.
+    ;; UCM is packaged from an AArch64 Linux release artifact.
     (supported-systems (list "aarch64-linux"))
     (synopsis "Minimal coding agent written in Unison")
     (description

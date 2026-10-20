@@ -15,12 +15,12 @@
   #:use-module (guix packages))
 
 (define unison-lang-version
-  "1.3.0")
+  "1.5.0")
 
 (define unison-lang-platform
   "linux-arm64")
 
-(define-public unison-lang-1.3
+(define-public unison-lang
   (package
     (name "unison-lang")
     (version unison-lang-version)
@@ -34,7 +34,7 @@
                                  unison-lang-platform ".tar.gz"))
        ;; The outer release archive pins both UCM and its bundled web UI.
        (sha256
-        (base32 "1jhwp0mdifblhypk85yrb1hsmykjpnywbzah31jicimhhgq6nx79"))))
+        (base32 "0kpzvgxfkf6mwzc2p6910bwr66k9yx62kf0x83dspfs0s10i9gm4"))))
     (build-system copy-build-system)
     (native-inputs (list patchelf))
     (inputs (list bash-minimal
@@ -136,6 +136,3 @@ content-addressed code.  This package installs the Unison Codebase Manager and
 its bundled local web interface from the official upstream release.")
     (home-page "https://www.unison-lang.org/")
     (license (list license:expat license:bsd-3))))
-
-(define-public unison-lang
-  unison-lang-1.3)
