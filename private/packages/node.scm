@@ -9,6 +9,18 @@
 ;; https://codeberg.org/guix/guix/src/commit/2e29152dd9b31e606dbe008c779774ba052799a7/gnu/packages/node.scm
 ;; This record does not pin the inherited package.  Before updating it, compare
 ;; the new recipe, inherited phases, and dependencies, then validate the build.
+(define-public node-24
+  (package
+    (inherit upstream:node-lts)
+    (version "24.22.1")
+    (source
+     (origin
+       (inherit (package-source upstream:node-lts))
+       (uri (string-append "https://nodejs.org/dist/v" version
+                           "/node-v" version ".tar.xz"))
+       (sha256
+        (base32 "0caj8cxrd78sr6lbb0zsgpxw8v51nq2gsn7kqaqaxkc0c9wpjlsg"))))))
+
 (define-public node-22
   (package
     (inherit upstream:node-lts)
