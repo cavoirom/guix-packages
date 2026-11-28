@@ -4,33 +4,24 @@
   #:use-module (guix download)
   #:use-module (guix packages))
 
-;; Get new version:
-;; curl -s https://api.github.com/repos/google-antigravity/antigravity-cli/releases/latest
-(define antigravity-cli-version
-  "1.5.19")
+;; Get the version and archive URL from Google's installer manifest:
+;; curl -fsSL https://antigravity-cli-auto-updater-974169037036.us-central1.run.app/manifests/linux_arm64_musl.json
 
 ;; The musl build is static: it has no program interpreter and no dynamic
 ;; section, so it runs without FHS emulation or patchelf.  The glibc build
 ;; embeds a ripgrep that needs /usr/grte/v5/lib/ld-linux-aarch64.so.1.
-(define antigravity-cli-platform
-  "linux_arm64_musl")
-
 (define-public antigravity-cli
   (package
     (name "antigravity-cli")
-    (version antigravity-cli-version)
+    (version "1.5.19")
     (source
      (origin
        (method url-fetch)
-       (uri (string-append
-             "https://github.com/google-antigravity/antigravity-cli/releases/download/"
-             antigravity-cli-version "/agy_cli_" antigravity-cli-platform
-             ".tar.gz"))
-       (file-name (string-append "antigravity-cli-" antigravity-cli-version
-                                 "-" antigravity-cli-platform ".tar.gz"))
-       ;; Update version and hash together; never use install.sh or the moving
-       ;; release manifest.
-       ;; Get new hash: guix download <the URL above>
+       (uri "https://storage.googleapis.com/antigravity-public/antigravity-cli/1.5.19-4821414830800896/linux-arm-musl/cli_linux_arm64_musl.tar.gz")
+       (file-name (string-append name "-" version "-linux_arm64_musl.tar.gz"))
+       ;; Update the version, archive URL, and hash together.  Use the manifest
+       ;; only to look up releases, not as a build source.
+       ;; Get new hash: guix download <the archive URL above>
        (sha256
         (base32 "1nrkn67n3xm8w7c51agmwi8snb7lf2j0pc8mskmi89rki45y9ss5"))))
     (build-system copy-build-system)
